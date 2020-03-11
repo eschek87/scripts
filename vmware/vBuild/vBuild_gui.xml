@@ -1,0 +1,313 @@
+<Window 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WpfApplication2"
+	Name="Window" WindowStartupLocation="CenterScreen"
+	Width="600" Height="950" ShowInTaskbar="True" BorderBrush="Transparent" Title="vBuild + vDisk" >
+	<Window.Resources>
+        <BooleanToVisibilityConverter x:Key="MyBoolToVisibilityConverter" />
+    </Window.Resources> 								
+	<DockPanel LastChildFill="False" Margin="3,3,3,3">
+		<StackPanel DockPanel.Dock="Top" Name ="Inputs" Margin="3,3,3,3" xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>
+			<TabControl BorderThickness="0" Margin="3,3,3,3">
+				<TabItem Header="vBuild - General">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>							
+						<GroupBox Grid.Row="0" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Compute and storage configuration" />
+							</GroupBox.Header>
+							<Grid Name="Compute">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<ComboBox Name="clusterorhost" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="0" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- 1. Select cluster/host -" Visibility="{Binding ElementName=clusterorhost, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																																
+								<ComboBox Name="policy" Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="1" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select storage policy (optional) -" Visibility="{Binding ElementName=policy, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																																					
+								<ComboBox Name="template" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="1" Grid.Column="0" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select template -" Visibility="{Binding ElementName=template, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																										
+								<ComboBox Name="esxhost" Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="1" Grid.Column="1" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select host -" Visibility="{Binding ElementName=esxhost, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																										
+								<ComboBox Name="customization" Grid.Row="2" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="2" Grid.Column="0" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select customization -" Visibility="{Binding ElementName=customization, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																																
+								<ComboBox Name="resourcepool" Grid.Row="2" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="2" Grid.Column="1" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select resourcepool (optional) -" Visibility="{Binding ElementName=resourcepool, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																										
+								<ComboBox Name="portgroup" Grid.Row="3" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="3" Grid.Column="0" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select portgroup -" Visibility="{Binding ElementName=portgroup, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																																						
+								<ComboBox Name="datastore" Grid.Row="3" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="3" Grid.Column="1" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select datastore -" Visibility="{Binding ElementName=datastore, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																								
+							</Grid>
+						</GroupBox>					
+						<GroupBox Grid.Row="1" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="VM configuration" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />									
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBox Name="vmname" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="0" Margin="7,7,7,7"  IsHitTestVisible="False" Text="Enter vm name here..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=vmname, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />								
+								<TextBox Name="description" Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter vm description here..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=description, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																										
+								<TextBox Name="totalcores" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Height="25" />						
+								<TextBlock Grid.Row="1" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Foreground="LightSteelBlue" Text="Move slider or enter total cpu cores here..." Visibility="{Binding ElementName=totalcores, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}"></TextBlock>																												
+								<Slider Grid.Row="1" Grid.Column="1" Value="{Binding ElementName=totalcores, Path=Text, UpdateSourceTrigger=PropertyChanged}" Name="scpu" Maximum="128" TickPlacement="BottomRight" TickFrequency="2" IsSnapToTickEnabled="True" Margin="3,3,3,3" />								
+								<TextBox Name="corespersocket" Grid.Row="2" Grid.Column="0" Margin="3,3,3,3" Height="25" Text="{Binding ElementName=totalcores, Path=Text,UpdateSourceTrigger=PropertyChanged}"/>						
+								<TextBlock Grid.Row="2" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Foreground="LightSteelBlue" Text="Move slider or enter cores per socket here..." Visibility="{Binding ElementName=corespersocket, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}"></TextBlock>																												
+								<Slider Grid.Row="2" Grid.Column="1" Value="{Binding ElementName=corespersocket, Path=Text, UpdateSourceTrigger=PropertyChanged}" Name="scores" Maximum="128" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Margin="3,3,3,3" />								
+								<TextBox Name="ram" Grid.Row="3" Grid.Column="0" Margin="3,3,3,3" Height="25" />	
+								<TextBlock Grid.Row="3" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Foreground="LightSteelBlue" Text="Move slider or enter ram here..." Visibility="{Binding ElementName=ram, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}"></TextBlock>																												
+								<Slider Grid.Row="3" Grid.Column="1" Value="{Binding ElementName=ram, Path=Text, UpdateSourceTrigger=PropertyChanged}" Name="sram" Maximum="6128" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Margin="3,3,3,3" />									
+								<ComboBox Name="disktype" Grid.Row="4" Grid.Column="0" Margin="3,3,3,3" Height="25" />																															
+								<TextBlock Grid.Row="4" Grid.Column="0" IsHitTestVisible="False" Margin="7,7,7,7" Foreground="Black" Text="- Select disk type -" Visibility="{Binding ElementName=disktype, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />	
+							</Grid>
+						</GroupBox>
+						<GroupBox Grid.Row="2" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Windows configuration" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />						
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<CheckBox Name="overwritehostname" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3">Overwrite computer account if exist</CheckBox>
+								<TextBox Name="hostname" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="1" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter hostname here (without domain)..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=hostname, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />						
+								<PasswordBox Name="adminpassword" Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Name="tbpw" Grid.Row="1" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter admin password here..." Foreground="LightSteelBlue" />							
+							</Grid>
+						</GroupBox>
+						<GroupBox Grid.Row="3" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Network configuration" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />  
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<CheckBox Name="staticip" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3">Use static ip</CheckBox>
+								<TextBox Name="ip" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Name="tbip" Grid.Row="1" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter ip address here..." Foreground="LightSteelBlue" />												
+								<TextBox Name="subnet" Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Name="tbsub" Grid.Row="1" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter subnet here..." Foreground="LightSteelBlue" />												
+								<TextBox Name="gateway" Grid.Row="2" Grid.Column="0" Margin="3,3,3,3" Height="25" />
+								<TextBlock Name="tbgw" Grid.Row="2" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter gateway here..." Foreground="LightSteelBlue" />													
+							</Grid>
+						</GroupBox>
+						<GroupBox Grid.Row="4" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Miscellaneous configuration" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" /> 
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>						
+								<TextBox Name="ticket" Grid.Row="0" Grid.Column="0"  Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="0" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter ticket number here..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=ticket, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />						
+								<ComboBox Name="mailto" Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Foreground="Black" Text="--- Select Mail address for logfile ---" Visibility="{Binding ElementName=mailto, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" />																																				
+							</Grid>					
+						</GroupBox>
+						<GroupBox Grid.Row="5" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="vBuild Actions" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />									
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>							
+								<Button Name="AddNewVM" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Height="25" Content="1. Add-NewVM" IsEnabled="False"  />
+								<Button Name="SetTags" Grid.Row="2" Grid.Column="0" Margin="3,3,3,3" Height="25" Content="2. Set-Tags" IsEnabled="False" />
+								<Button Name="InvokePostConfig" Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Height="25" Content="3. Invoke-PostConfig" IsEnabled="False" />
+								<Button Name="InstallSoftware" Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Height="25" Content="4. Install-Software" IsEnabled="False" />
+								<Button Name="InvokeNSXConfig" Grid.Row="2" Grid.Column="1" Margin="3,3,3,3" Height="25" Content="5. Invoke-NSXConfig" IsEnabled="False" />
+							</Grid>					
+						</GroupBox>
+					</Grid>
+				</TabItem>		
+				<TabItem Header="vBuild - Tags">
+					<GroupBox Margin="3,3,3,3">
+						<GroupBox.Header>
+							<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Select tags" />
+						</GroupBox.Header>
+						<Grid Name="Tagging">
+						</Grid>
+					</GroupBox>
+				</TabItem>
+				<TabItem Header="vBuild - Folder">
+					<GroupBox Margin="3,3,3,3">
+						<GroupBox.Header>
+							<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Select vm folder for placement" />
+						</GroupBox.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>		
+							<ListBox Name="vmfolder" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Height="500" Width="600" Margin="3,3,3,3" />
+						</Grid>
+					</GroupBox>
+				</TabItem>		
+				<TabItem Header="vBuild - VM Options">
+						<Grid Name="VMOptions">
+						</Grid>
+				</TabItem>
+				<TabItem Header="vBuild - Post Config">
+						<Grid Name="PostConfig">
+						</Grid>
+				</TabItem>		
+				<TabItem Header="vBuild - Software">
+						<Grid Name="Software">
+						</Grid>
+				</TabItem>
+				<TabItem Header="vBuild - NSX">
+						<Grid Name="NSXConfig">
+						</Grid>
+				</TabItem>					
+				<TabItem Header="vDisk - Extend">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>			
+						<GroupBox Grid.Row="0" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="Extend Disk" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+									<RowDefinition Height="*" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>	
+								<Label Grid.Row="0" Grid.Column="0" Content="VM Name:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="0" Grid.Column="1" Name="vmname1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="0" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="Type vmname here ..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=vmname1, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" /> 
+								<Label Grid.Row="1" Grid.Column="0" Content="Hostname:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="1" Grid.Column="1" Name="hostname1" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="1" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="or type hostname here ..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=hostname1, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" /> 						
+								<Label Grid.Row="2" Grid.Column="0" Content="Operating System:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="2" Grid.Column="1" Name="os" Margin="3,3,3,3" IsReadOnly="True" Height="25" /> 
+								<Label Grid.Row="3" Grid.Column="0" Content="Drive Letter:" Margin="3,3,3,3" Height="25" />
+								<ComboBox Grid.Row="3" Grid.Column="1" Name="driveletter" Margin="3,3,3,3" Height="25" />
+								<Label Grid.Row="4" Grid.Column="0" Content="Win Volume Name:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="4" Grid.Column="1" Name="winvolname" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.WinVolumeName,Mode=OneWay}" IsReadOnly="True" /> 
+								<Label Grid.Row="5" Grid.Column="0" Content="Win Disk Size (GB):" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="5" Grid.Column="1" Name="windisksize" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.WinSize,Mode=OneWay}" IsReadOnly="True" /> 											
+								<Label Grid.Row="6" Grid.Column="0" Content="Win Free (GB):" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="6" Grid.Column="1" Name="windiskfree" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.WinFree,Mode=OneWay}" IsReadOnly="True" /> 																	
+								<Label Grid.Row="7" Grid.Column="0" Content="VM Diskname:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="7" Grid.Column="1" Name="diskname" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.DiskName,Mode=OneWay}" IsReadOnly="True" /> 
+								<Label Grid.Row="8" Grid.Column="0" Content="VM Storage Format:" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="8" Grid.Column="1" Name="storageformat" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.StorageFormat,Mode=OneWay}" IsReadOnly="True" /> 
+								<Label Grid.Row="9" Grid.Column="0" Content="Current VM Disk Size (GB):" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="9" Grid.Column="1" Name="disksize_current" Margin="3,3,3,3" Text="{Binding ElementName=driveletter,Path=SelectedItem.Size,Mode=OneWay}" IsReadOnly="True" /> 																	
+								<Label Grid.Row="10" Grid.Column="0" Content="New VM Disk Size (GB):" Margin="3,3,3,3" Height="25" />
+								<TextBox Grid.Row="10" Grid.Column="1" Name="disksize_new" Margin="3,3,3,3" Height="25" />
+								<TextBlock Grid.Row="10" Grid.Column="1" Margin="7,7,7,7" IsHitTestVisible="False" Text="Enter new disk size in GB here ..." Foreground="LightSteelBlue" Visibility="{Binding ElementName=disksize_new, Path=Text.IsEmpty, Converter={StaticResource MyBoolToVisibilityConverter}}" /> 			
+							</Grid>
+						</GroupBox>
+						<GroupBox Grid.Row="1" Margin="3,3,3,3">
+							<GroupBox.Header>
+								<Label FontWeight="Bold" FontFamily="Calibri" FontSize="16"  Content="vDisk Actions" />
+							</GroupBox.Header>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />					
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>						
+								<Button Name="GetVMDisk" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Height="25" Content="1. Get-VMDisk" IsEnabled="False" />
+								<Button Name="SetVMDisk" Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Height="25" Content="2. Set-VMDisk" IsEnabled="False" />
+							</Grid>					
+						</GroupBox>
+					</Grid>
+				</TabItem>
+			</TabControl>
+		</StackPanel>
+		<StatusBar Name="statusbar" DockPanel.Dock="Bottom" Margin="3,3,3,3">
+			<StatusBar.ItemsPanel>
+				<ItemsPanelTemplate>
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />					
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+					</Grid>
+				</ItemsPanelTemplate>
+			</StatusBar.ItemsPanel>
+			<StatusBarItem Grid.Column="0">
+				<ProgressBar Name="progressbar" Width="250" Height="25" Value="0" Margin="3,3,3,3" />
+			</StatusBarItem>
+			<StatusBarItem Grid.Column="1">
+				<TextBlock Name="progress" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Margin="3,3,3,3" />
+			</StatusBarItem>
+		</StatusBar>
+	</DockPanel>
+</Window>

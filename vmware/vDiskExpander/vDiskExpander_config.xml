@@ -1,0 +1,9 @@
+﻿<?xml version="1.0"?>
+<Settings>
+	<VMware>
+		<VCenters>
+			<VCenter>vc1</VCenter>
+			<VCenter>vc2</VCenter>
+		</VCenters>
+	</VMware>	
+</Settings>

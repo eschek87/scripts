@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<Settings>
+	<VMware>
+		<VCenters>
+			<VCenter>VC1@LOCAL.COM</VCenter>
+			<VCenter>VC2@LOCAL.COM</VCenter>
+		</VCenters>
+		<CustomizationSpec>
+			<PrimaryDNS>DNS-SERVER1</PrimaryDNS>
+			<SecondaryDNS>DNS-SERVER2</SecondaryDNS>
+		</CustomizationSpec>
+	</VMware>
+	<Software>
+		<ListOfSoftware name="Select Software">
+			<Software>
+				<Name>Symantec</Name>
+				<Source>\\UNCPATH-TO-SETUP\setup.exe</Source>
+				<Destination>\\HOSTNAME\c$\tmp\</Destination>
+				<InstallCommand>Start-Process C:\tmp\setup.exe -Wait -ArgumentList '/s /v"/qn /l*v C:\SymantecInstall.log"'</InstallCommand>
+				<RemoveDestination>true</RemoveDestination>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-Service -Name SERVICENAME).Status</ValidateCommand>
+			</Software>
+			<Software>
+				<Name>BgInfo</Name>
+				<Source>\\UNCPATH-TO-BGINFO-FILES\bginfo\*</Source>
+				<Destination>\\HOSTNAME\c$\utils\</Destination>
+				<InstallCommand>move-item 'C:\utils\Bginfo.exe - Shortcut.lnk' 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp' ; New-ItemProperty -Path HKLM:SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name srvcomment -PropertyType String -Value VMNAME -Force; Unblock-File C:\utils\Bginfo.exe</InstallCommand>
+				<RemoveDestination>false</RemoveDestination>
+				<IsChecked>true</IsChecked>
+			</Software>
+		</ListOfSoftware>
+	</Software>
+	<PostConfig>
+		<Powershell name="Powershell Cmdlets">
+			<PostConfig>
+				<Name>Delete AD Group SRVADM-HOSTNAME</Name>
+				<Command>Remove-ADGroup 'SRVADM-HOSTNAME' -Confirm:$false</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>true</IsChecked>
+			</PostConfig>
+			<PostConfig>
+				<Name>Create AD Group SRVADM-HOSTNAME</Name>
+				<Command>New-ADGroup -Name 'SRVADM-HOSTNAME' -GroupCategory Security -GroupScope Global -Path 'OU=SERVER,OU=LOCAL,DC=COM' -Confirm:$false</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-ADGroup -Filter {SamAccountName -eq "SRVADM-HOSTNAME"}).SamAccountName</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Add AD Group ADGROUP-FOR-COMPUTER-ACCOUNT</Name>
+				<Command>Add-ADGroupMember ADGROUP-FOR-COMPUTER-ACCOUNT -Members 'HOSTNAME$' -ErrorAction Stop</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-ADPrincipalGroupMembership (Get-ADComputer HOSTNAME).DistinguishedName -Server $((Get-ADDomain).PDCEmulator)).Name -join ';'</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Add AD Group ADGROUP-FOR-COMPUTER-ACCOUNT</Name>
+				<Command>Add-ADGroupMember ADGROUP-FOR-COMPUTER-ACCOUNT -Members 'HOSTNAME$' -ErrorAction Stop</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>true</IsChecked>
+			</PostConfig>
+			<PostConfig>
+				<Name>Move to ou SERVER</Name>
+				<Command>ou=SERVER,dc=LOCAL,dc=COM</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-ADPrincipalGroupMembership (Get-ADComputer HOSTNAME).DistinguishedName -Server $((Get-ADDomain).PDCEmulator)).Name -join ';'</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Move to ou CLIENTS</Name>
+				<Command>ou=CLIENTS,dc=LOCAL,dc=COM</Command>
+				<Type>ActiveDirectoryCmdlets</Type>
+				<IsChecked>false</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-ADPrincipalGroupMembership (Get-ADComputer HOSTNAME).DistinguishedName -Server $((Get-ADDomain).PDCEmulator)).Name -join ';'</ValidateCommand>
+			</PostConfig>
+		</Powershell>
+		<PowerCLI name="PowerCLI Invoke-VMScript Cmdlets">
+			<PostConfig>
+				<Name>W2K16+ Add AD Group ABC, DEF and SRVADM-HOSTNAME to local administrator</Name>
+				<Description>Add the mentioned active directory groups to the local administrators group of the server. Works windows server 2016 onwards</Description>
+				<Command>Add-LocalGroupMember -Group 'Administrators' -Member 'ABC','DEF','SRVADM-HOSTNAME'</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-LocalGroupMember -Group "Administrators").Name</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Add AD Group AD-GROUP to local administrator</Name>
+				<Description>Add the mentioned active directory groups to the local administrators group of the server</Description>
+				<Command>net localgroup administrators AD-GROUP /add</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>False</IsChecked>
+				<Validate>False</Validate>
+				<ValidateCommand></ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Add AD Group SRVADM-HOSTNAME to local administrator</Name>
+				<Description>Add the mentioned active directory groups to the local administrators group of the server</Description>
+				<Command>net localgroup administrators SRVADM-HOSTNAME /add</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>False</IsChecked>
+				<Validate>False</Validate>
+				<ValidateCommand></ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Set PowerPlan to High Performance</Name>
+				<Description>Set windows power option to high performance</Description>
+				<Command>powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>powercfg /GETACTIVESCHEME</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Disable Firewall</Name>
+				<Description>Disables windows firewall completly</Description>
+				<Command>Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>Get-NetFirewallProfile | Select Name, Enabled</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Set Disk Policy</Name>
+				<Description>All new disks are brought online https://docs.microsoft.com/en-us/powershell/module/storage/set-storagesetting?view=win10-ps</Description>
+				<Command>Set-StorageSetting -NewDiskPolicy OnlineAll</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-StorageSetting).NewDiskPolicy</ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Clean Eventlog</Name>
+				<Description>Clean up all eventlogs</Description>
+				<Command>Wevtutil el | ForEach { wevtutil cl $_}</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>true</IsChecked>
+				<Validate>False</Validate>
+				<ValidateCommand></ValidateCommand>
+			</PostConfig>
+			<PostConfig>
+				<Name>Change CD Drive Letter to Z:</Name>
+				<Description>Changes cd rom drive letter to z:</Description>
+				<Command>Set-WmiInstance -InputObject ( Get-WmiObject -Class Win32_Volume -Filter "DriveType=5" ) -Arguments @{DriveLetter='Z:'}</Command>
+				<Type>Invoke-VMScript</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>False</Validate>
+				<ValidateCommand></ValidateCommand>
+			</PostConfig>
+		</PowerCLI>
+	</PostConfig>
+	<NSXConfig>
+		<PowerNSX name="PowerNSX Cmdlets">
+			<NSXConfig>
+				<Name>Create new nsx security group: SG-VMNAME</Name>
+				<Command>New-NsxSecurityGroup SG-VMNAME</Command>
+				<Type>PowerNSX</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-NsxSecurityGroup -name SG-VMNAME).Name</ValidateCommand>
+			</NSXConfig>
+			<NSXConfig>
+				<Name>Create new nsx security tag: ST-VMNAME</Name>
+				<Command>New-NsxSecurityTag ST-VMNAME</Command>
+				<Type>PowerNSX</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-NsxSecurityTag -name ST-VMNAME).Name</ValidateCommand>
+			</NSXConfig>
+			<NSXConfig>
+				<Name>Add NSX Security Group Member ST-VMNAME to SG-VMNAME</Name>
+				<Command>Get-NsxSecurityGroup -name SG-VMNAME | Add-NsxSecurityGroupMember -Member (Get-NsxSecurityTag -name ST-VMNAME)</Command>
+				<Type>PowerNSX</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-NsxSecurityGroup -name SG-VMNAME).member.name</ValidateCommand>
+			</NSXConfig>
+			<NSXConfig>
+				<Name>Assign nsx security tag ST-VMNAME to VMNAME</Name>
+				<Command>Get-NsxSecurityTag ST-VMNAME | New-NsxSecurityTagAssignment -ApplytoVM -VirtualMachine (Get-VM VMNAME)</Command>
+				<Type>PowerNSX</Type>
+				<IsChecked>True</IsChecked>
+				<Validate>True</Validate>
+				<ValidateCommand>(Get-NsxSecurityTagAssignment -VirtualMachine (Get-VM VMNAME)).SecurityTag.name</ValidateCommand>
+			</NSXConfig>
+		</PowerNSX>
+	</NSXConfig>
+	<VMOptions>
+		<PowerCLI name="PowerCLI Cmdlets">
+			<VMOptions>
+				<Name>VMware Tools Update UpgradeAtPowerCycle</Name>
+				<Command>$vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec ; $vmConfigSpec.Tools = New-Object VMware.Vim.ToolsConfigInfo ; $vmConfigSpec.Tools.ToolsUpgradePolicy = "UpgradeAtPowerCycle" ; (Get-VM VMNAME).ExtensionData.ReconfigVM_task($vmConfigSpec)</Command>
+				<Type>PowerCLI</Type>
+				<IsChecked>True</IsChecked>
+			</VMOptions>
+			<VMOptions>
+				<Name>VMware Tools Update Manual</Name>
+				<Command>$vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec ; $vmConfigSpec.Tools = New-Object VMware.Vim.ToolsConfigInfo ; $vmConfigSpec.Tools.ToolsUpgradePolicy = "manual" ; (Get-VM VMNAME).ExtensionData.ReconfigVM_task($vmConfigSpec)</Command>
+				<Type>PowerCLI</Type>
+				<IsChecked>False</IsChecked>
+			</VMOptions>
+			<VMOptions>
+				<Name>Disk Enable UUID (write the disk UUID/Serial to the VMX)</Name>
+				<Command>(Get-VM VMNAME) | New-AdvancedSetting -Name "disk.enableUUID" -Value "true" -Confirm:$false</Command>
+				<Type>PowerCLI</Type>
+				<IsChecked>True</IsChecked>
+			</VMOptions>
+			<VMOptions>
+				<Name>CPU HotAdd</Name>
+				<Command>$vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec ; $vmConfigSpec.CpuHotAddEnabled = $true ; (Get-VM VMNAME).ExtensionData.ReconfigVM_task($vmConfigSpec)</Command>
+				<Type>PowerCLI</Type>
+				<IsChecked>False</IsChecked>
+			</VMOptions>
+			<VMOptions>
+				<Name>Memory HotAdd</Name>
+				<Command>$vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec ; $vmConfigSpec.MemoryHotAddEnabled = $true ; (Get-VM VMNAME).ExtensionData.ReconfigVM_task($vmConfigSpec)</Command>
+				<Type>PowerCLI</Type>
+				<IsChecked>False</IsChecked>
+			</VMOptions>
+		</PowerCLI>
+	</VMOptions>
+	<Mail>
+		<Smtp>SMTP.LOCAL.COM</Smtp>
+		<Subject>VM VMNAME deployed</Subject>
+		<From>vCheck@LOCAL.COM</From>
+		<To>USER1@LOCAL.COM</To>
+		<To>USER2@LOCAL.COM</To>
+	</Mail>
+</Settings>
